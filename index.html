@@ -3,115 +3,200 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthday Puzzle 🎉</title>
-
 <style>
+:root{--primary-grad:linear-gradient(135deg,#ff6b9d,#feca57);--card-grad:linear-gradient(135deg,rgba(255,255,255,0.95),rgba(255,250,245,0.95));--shadow-lg:0 12px 48px rgba(0,0,0,0.2);}
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-    text-align:center;
-    font-family:Arial;
-    background:#ffe6e6;
+  text-align:center;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background:linear-gradient(120deg,#ffd6e8 0%,#fff5c3 50%,#e0c3fc 100%);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px
 }
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 80%,rgba(255,107,157,0.1),transparent 50%);pointer-events:none;z-index:-1}
+.hidden{display:none!important;}
+
+#page1{animation:slideIn 0.6s ease-out}
+#page1 h2{font-size:clamp(24px,5vw,42px);margin-bottom:20px;background:var(--primary-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;letter-spacing:1px}
 
 #board{
-    width:240px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:repeat(3,80px);
-    gap:5px;
+  width:min(320px,90vw);margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  padding:16px;background:rgba(255,255,255,0.95);border-radius:20px;box-shadow:var(--shadow-lg);
+  backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.6)
 }
+.tile{aspect-ratio:1/1;background-size:300px 300px;border-radius:16px;cursor:pointer;border:3px solid rgba(255,255,255,0.8);transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 30px rgba(0,0,0,0.15);position:relative;overflow:hidden}
+.tile:hover{transform:translateY(-8px);box-shadow:0 12px 25px rgba(255,107,157,0.3)}
+.tile:active{transform:scale(0.95)}
 
-.tile{
-    width:80px;
-    height:80px;
-    background:#ff6b81;
-    color:white;
-    font-size:28px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border-radius:10px;
-}
+.fixed{border:4px solid #ffd700!important;background:linear-gradient(135deg,#fffacd,#ffff99)!important;cursor:default!important;box-shadow:inset 0 0 10px rgba(255,215,0,0.5),var(--shadow-lg)!important;animation:glow 1.5s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:inset 0 0 10px rgba(255,215,0,0.5),0 0 15px rgba(255,215,0,0.4)}50%{box-shadow:inset 0 0 20px rgba(255,215,0,0.8),0 0 30px rgba(255,215,0,0.6)}}
 
-.empty{
-    background:white;
-}
+#showfull{animation:fadeIn 0.6s ease-out}
+#showfull h2{font-size:clamp(28px,5.5vw,46px);margin-bottom:30px;background:var(--primary-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;letter-spacing:2px}
 
-img{
-    width:200px;
-    border-radius:20px;
-    margin-top:15px;
-}
+#fullimg{width:min(300px,80vw);border-radius:24px;margin-top:20px;box-shadow:var(--shadow-lg);transition:transform 0.4s ease;border:8px solid rgba(255,255,255,0.8);animation:scaleIn 0.8s cubic-bezier(0.34,1.56,0.64,1)}
+#fullimg:hover{transform:scale(1.05) rotate(1deg)}
 
-button{
-    padding:10px 20px;
-    font-size:18px;
-    margin-top:20px;
+#page2{animation:fadeIn 0.8s ease-out;max-width:600px;margin:auto}
+#page2 h1{font-size:clamp(32px,6vw,52px);margin-bottom:12px;background:var(--primary-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;letter-spacing:2px}
+#page2 p{font-size:18px;color:#666;margin-bottom:28px;animation:bounce 2s ease-in-out infinite;font-weight:600}
+#page2 img{width:min(320px,85vw);border-radius:24px;cursor:pointer;box-shadow:var(--shadow-lg);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);border:6px solid rgba(255,255,255,0.9);animation:slideUp 0.7s cubic-bezier(0.34,1.56,0.64,1)}
+#page2 img:hover{transform:scale(1.08) translateY(-12px);box-shadow:0 20px 50px rgba(255,107,157,0.4);filter:brightness(1.05)}
+#page2 img:active{transform:scale(0.96)}
+
+#page3{animation:fadeIn 0.8s ease-out;max-width:800px;margin:auto}
+#page3 h2{font-size:clamp(28px,5.5vw,44px);margin-bottom:32px;background:var(--primary-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900}
+
+#message{
+  width:min(85vw,700px);margin:auto;padding:48px;background:var(--card-grad);border-radius:24px;box-shadow:var(--shadow-lg);
+  backdrop-filter:blur(10px);border:3px solid rgba(255,107,157,0.2);font-size:17px;line-height:2.2;color:#1a1a2e;text-align:center;
+  animation:slideUp 0.8s cubic-bezier(0.34,1.56,0.64,1);position:relative;letter-spacing:1px;font-weight:500;font-style:italic
 }
+#message::before{content:'✦';position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:24px;color:#ff6b9d;opacity:0.4}
+#message::after{content:'✦';position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:24px;color:#ff6b9d;opacity:0.4}
+#message p{margin:20px 0;position:relative;z-index:1;font-family:'Georgia',serif}
+#message p:nth-child(1){font-weight:700;font-size:18px;color:#ff5f8f;letter-spacing:2px;font-style:italic}
+#message p:nth-child(2){font-size:16px;color:#2c3e50;font-style:italic;opacity:0.95}
+#message p:nth-child(3){font-size:15px;color:#444;line-height:2.4;opacity:0.9}
+#message p:nth-child(4){font-weight:600;font-size:16px;color:#ff5f8f;margin-top:24px;font-style:italic}
+
+#count{font-size:clamp(60px,15vw,140px);margin-top:40px;font-weight:900;background:var(--primary-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:popCountdown 1s cubic-bezier(0.68,-0.55,0.265,1.55) infinite;text-shadow:0 4px 20px rgba(255,107,157,0.3);letter-spacing:8px}
+@keyframes popCountdown{0%{transform:scale(0.3);opacity:0}50%{transform:scale(1.3);opacity:1}100%{transform:scale(0.8);opacity:1}}
+
+@keyframes slideIn{0%{opacity:0;transform:translateX(-50px)}100%{opacity:1;transform:translateX(0)}}
+@keyframes slideUp{0%{opacity:0;transform:translateY(50px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+@keyframes scaleIn{0%{opacity:0;transform:scale(0.8)}100%{opacity:1;transform:scale(1)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+@media(max-width:480px){#board{gap:6px;padding:12px}#message{padding:20px;font-size:15px}}
 </style>
 </head>
-
 <body>
 
-<h2>😊 Solve Puzzle</h2>
-
+<!-- PAGE 1 PUZZLE -->
+<div id="page1">
+<h2>😊 Solve the Puzzle</h2>
 <div id="board"></div>
-
-<div id="wish" style="display:none;">
-<h1>🎉 Happy Birthday Tanu 🎉</h1>
-<img src="friend.jpeg">
-<br>
-<button onclick="showMsg()">Click ❤️</button>
 </div>
 
-<div id="msg" style="display:none;">
-<h2>You are my best friend ❤️</h2>
-<p>You are kind, funny and always help me.
-Stay happy forever 😊</p>
+<!-- SHOW FULL IMAGE BEFORE COUNTDOWN -->
+<div id="showfull" class="hidden">
+<h2>🎉 Puzzle Completed 🎉</h2>
+<img id="fullimg" src="friend.jpeg">
+</div>
+
+<!-- PAGE 2 PHOTO -->
+<div id="page2" class="hidden">
+<h1>🎉 Happy Birthday Tanu 🎉</h1>
+<p>Click Photo ❤️</p>
+<img src="friend2.jpeg" onclick="goPage3()">
+</div>
+
+<!-- PAGE 3 MESSAGE -->
+<div id="page3" class="hidden">
+<h2>❤️ Once Again Happy Birthday ❤️</h2>
+<div id="message">
+<p>✨ May God Bless You ✨</p>
+<p>With happiness, success, and everlasting good health...</p>
+<p>You are a really good friend, and I truly appreciate you.
+Even though we haven’t met until now and maybe may not meet in the future, I genuinely wish that you grow and achieve great things in life.</p>
+<p>This is your special day, so enjoy it to the fullest.
+Stay happy wherever you are and keep smiling always  🌟</p>
+</div>
 </div>
 
 <script>
+let board=document.getElementById("board");
+let tiles=[];
+let empty=8;
+let fixed=new Array(9).fill(false);
 
-let tiles=[1,2,3,4,5,0]; // 0 = empty
-
-function draw(){
-    let b=document.getElementById("board");
-    b.innerHTML="";
-    tiles.forEach((t,i)=>{
+function createTiles(){
+    for(let i=0;i<9;i++){
         let d=document.createElement("div");
         d.className="tile";
-        if(t==0){d.classList.add("empty");}
-        else{d.innerText=t;}
+        if(i!==8){
+            let x=(i%3)*-100;
+            let y=Math.floor(i/3)*-100;
+            d.style.backgroundImage="url('friend.jpeg')";
+            d.style.backgroundPosition=`${x}px ${y}px`;
+        }else d.style.background="white";
         d.onclick=()=>move(i);
-        b.appendChild(d);
-    });
+        board.appendChild(d);
+        tiles.push(i);
+    }
 }
 
-function move(i){
-    let empty=tiles.indexOf(0);
+function shuffle(){
+    for(let i=0;i<200;i++){
+        let n=Math.floor(Math.random()*9);
+        move(n,true);
+    }
+}
 
-    if(Math.abs(i-empty)==1 || Math.abs(i-empty)==3){
-        [tiles[i],tiles[empty]]=[tiles[empty],tiles[i]];
-        draw();
+function move(i,isShuffle=false){
+    if(fixed[i]) return;
+    [tiles[i],tiles[empty]]=[tiles[empty],tiles[i]];
+    swapDivs(i,empty);
+    empty=i;
+    if(!isShuffle){
+        checkFixed();
         checkWin();
     }
 }
 
-function checkWin(){
-    if(tiles.join()==="1,2,3,4,5,0"){
-        document.getElementById("board").style.display="none";
-        document.getElementById("wish").style.display="block";
+function swapDivs(a,b){
+    let nodes=board.children;
+    let nodeA=nodes[a];
+    let nodeB=nodes[b];
+    let cloneA=nodeA.cloneNode(true);
+    let cloneB=nodeB.cloneNode(true);
+    board.replaceChild(cloneB,nodeA);
+    board.replaceChild(cloneA,nodeB);
+    cloneA.onclick=()=>move(b);
+    cloneB.onclick=()=>move(a);
+}
+
+function checkFixed(){
+    for(let i=0;i<8;i++){
+        if(tiles[i]===i){
+            fixed[i]=true;
+            board.children[i].classList.add("fixed");
+        }
     }
 }
 
-function showMsg(){
-    document.getElementById("wish").style.display="none";
-    document.getElementById("msg").style.display="block";
+function checkWin(){
+    for(let i=0;i<8;i++) if(tiles[i]!==i) return;
+    if(empty!==8) return;
+    document.getElementById("page1").classList.add("hidden");
+    document.getElementById("showfull").classList.remove("hidden");
+    setTimeout(startCountdown,2000); // show full image 2 sec
 }
 
-// shuffle puzzle
-tiles.sort(()=>Math.random()-0.5);
-draw();
+function startCountdown(){
+    document.getElementById("showfull").classList.add("hidden");
+    let c=document.createElement("div");
+    c.id="count";
+    document.body.appendChild(c);
+    let n=3;
+    c.innerText=n;
+    let timer=setInterval(()=>{
+        n--;
+        if(n===0){
+            clearInterval(timer);
+            c.remove();
+            document.getElementById("page2").classList.remove("hidden");
+        }else c.innerText=n;
+    },1000);
+}
 
+function goPage3(){
+    document.getElementById("page2").classList.add("hidden");
+    document.getElementById("page3").classList.remove("hidden");
+}
+
+createTiles();
+shuffle();
 </script>
-
 </body>
 </html>
